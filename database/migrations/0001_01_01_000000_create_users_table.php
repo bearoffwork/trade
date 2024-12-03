@@ -1,11 +1,34 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
+    private const users = [
+        '藥吹',
+        '藥炎',
+        '藥頭',
+        'Rush',
+        '藥夯',
+        '藥嗨',
+        '藥奶',
+        '藥去了',
+        '藥涼',
+        '森上',
+        'Bear',
+        'Machillz',
+        '藥精',
+        '烏拉妮雅',
+        '膏肓痛痛丸',
+        '紅黑單雙',
+        '很秀阿a',
+        'KOKE',
+        'YHao',
+        '武翠紅',
+    ];
+
     /**
      * Run the migrations.
      */
@@ -20,6 +43,14 @@ return new class extends Migration
             $table->rememberToken();
             $table->timestamps();
         });
+
+        foreach (self::users as $name) {
+            User::create([
+                'name' => $name,
+                'password' => Hash::make($name),
+                'email' => $name . '@localhost',
+            ]);
+        }
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();
