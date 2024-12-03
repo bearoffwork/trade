@@ -32,6 +32,7 @@
               # sodium
               tokenizer
               xdebug
+              simplexml
               xmlreader
               xmlwriter
               zip
