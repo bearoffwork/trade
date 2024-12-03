@@ -23,13 +23,9 @@ class AppInit extends Command
         $this->call('migrate:fresh');
 
         $cacheUser->each(function (User $user) {
-            $attr = $user
+            User::insert($user
                 ->setHidden([])
-                ->attributesToArray();
-
-            dump($attr);
-            User::insert($attr);
-            dump(User::find($attr['id'])->setHidden([])->toArray());
+                ->attributesToArray());
         });
     }
 }
