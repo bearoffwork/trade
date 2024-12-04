@@ -34,4 +34,9 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public static function getFrontendDisplayColumn(): string
+    {
+        return config('display.hide_names') ? 'id' : 'name';
+    }
 }

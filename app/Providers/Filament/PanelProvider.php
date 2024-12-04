@@ -3,6 +3,7 @@
 namespace App\Providers\Filament;
 
 use App\Panel\Pages\Login;
+use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -73,6 +74,12 @@ class PanelProvider extends FilamentPanelProvider
         Select::configureUsing(function (Select $select) {
             $select
                 ->native(false);
+        });
+
+        DateTimePicker::configureUsing(function (DateTimePicker $picker) {
+            $picker
+                ->native(false)
+                ->displayFormat('Y-m-d H:i:s');
         });
     }
 }

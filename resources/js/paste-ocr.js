@@ -1,7 +1,5 @@
 import Tesseract from "tesseract.js";
 
-// const members = ['藥吹', '藥炎', '藥頭', 'Rushh', '藥夯', '藥嗨', '藥奶', '藥去了', '藥涼', '森上', 'Bear', 'Machillz', '藥精', '烏拉妮雅', '膏肓痛痛丸', '紅黑單雙', '很秀阿a', 'KOKE', 'YHao', '武翠紅'];
-
 document.addEventListener('alpine:init', () => {
     Alpine.bind('NamePicInput', () => ({
         worker: null,
@@ -9,16 +7,18 @@ document.addEventListener('alpine:init', () => {
             this.worker = await Tesseract.createWorker('chi_tra');
         },
         async '@paste'(e) {
+            // FIXME value = '' not working
+            this.$el.value = '';
             this.$el.disabled = true;
-            this.$el.value = null;
             try {
                 for (const item of e.clipboardData.files) {
                     console.log(item);
                     if (item.type.startsWith('image/')) {
                         const pasted = URL.createObjectURL(item);
                         const result = await scanName(this.worker, pasted, this.options);
-                        console.log(result);
-                        this.$wire.set('data.' + this.$el.dataset.poResultPath, result);
+                        const wireStatePath = 'data.' + this.$el.dataset.poResultPath;
+                        const curChecked = this.$wire.get(wireStatePath) || [];
+                        this.$wire.set(wireStatePath, [...result, ...curChecked]);
                     }
                 }
             } finally {

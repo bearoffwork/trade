@@ -78,7 +78,7 @@ return new class extends Migration
             $table->string('item_name');
 
             $table->string('item_type')->comment('分類');
-            $table->foreign('item_type')->references('id')->on('item_type');
+            $table->foreign('item_type')->references('id')->on('item_types');
 
             $table->integer('qty')->default(1)->comment('數量');
 
@@ -89,7 +89,7 @@ return new class extends Migration
             $table->foreignId('buyer_uid')->nullable()->comment('得標者');
 
             $table->timestamp('drop_at')->comment('物品掉落時間');
-            $table->timestamp('close_at')->comment('截標時間');
+            $table->timestamp('close_at')->nullable()->comment('截標時間');
             $table->timestamp('pay_at')->nullable()->comment('繳費時間');
             $table->foreignId('create_uid')->comment('填單人員')->constrained('users');
             $table->timestamp('created_at')->nullable();
