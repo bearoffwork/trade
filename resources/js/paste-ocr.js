@@ -1,28 +1,24 @@
 import Tesseract from "tesseract.js";
 
-const members = ['藥吹', '藥炎', '藥頭', 'Rushh', '藥夯', '藥嗨', '藥奶', '藥去了', '藥涼', '森上', 'Bear', 'Machillz', '藥精', '烏拉妮雅', '膏肓痛痛丸', '紅黑單雙', '很秀阿a', 'KOKE', 'YHao', '武翠紅'];
+// const members = ['藥吹', '藥炎', '藥頭', 'Rushh', '藥夯', '藥嗨', '藥奶', '藥去了', '藥涼', '森上', 'Bear', 'Machillz', '藥精', '烏拉妮雅', '膏肓痛痛丸', '紅黑單雙', '很秀阿a', 'KOKE', 'YHao', '武翠紅'];
 
 document.addEventListener('alpine:init', () => {
     Alpine.bind('NamePicInput', () => ({
-        'data-result': null, worker: null, async 'x-init'() {
+        worker: null,
+        async 'x-init'() {
             this.worker = await Tesseract.createWorker('chi_tra');
-            console.log('tesseract init');
-        }, async '@paste'(e) {
+        },
+        async '@paste'(e) {
             this.$el.disabled = true;
+            this.$el.value = null;
             try {
                 for (const item of e.clipboardData.files) {
                     console.log(item);
                     if (item.type.startsWith('image/')) {
                         const pasted = URL.createObjectURL(item);
-                        const result = await scanName(this.worker, pasted);
-
-                        document.querySelectorAll('[data-result="name"]')
-                            .forEach(el => {
-                                el.value = [el.value, ...result].join('\n').trim();
-                                el.scrollTop = el.scrollHeight;
-                                el.style.height = 'auto';
-                                el.style.height = el.scrollHeight + 'px';
-                            });
+                        const result = await scanName(this.worker, pasted, this.options);
+                        console.log(result);
+                        this.$wire.set('data.' + this.$el.dataset.poResultPath, result);
                     }
                 }
             } finally {
@@ -34,11 +30,16 @@ document.addEventListener('alpine:init', () => {
 
 const isNumber = (value) => typeof value === 'number' && isFinite(value);
 
-const scanName = async function (worker, file) {
+const scanName = async function (worker, file, options) {
     const res = await worker.recognize(file);
     let result = Array();
 
-    let possibleLv = Array(), bbLvStart = null, bbLvEnd = null, name = '', skip = false;
+    let possibleLv = Array(),
+        bbLvStart = null,
+        bbLvEnd = null,
+        name = '',
+        foundId = undefined,
+        skip = false;
     // Draw bounding boxes around recognized words
     res.data.words.forEach((word) => {
         // console.log(word.text)
@@ -93,8 +94,8 @@ const scanName = async function (worker, file) {
             if (isName) {
                 name = name + word.text.trim();
                 console.log(name);
-                if (members.includes(name)) {
-                    result.push(name);
+                if ((foundId = options[name]) !== undefined) {
+                    result.push(foundId);
                     // const newParagraph = document.createElement('p')
                     // newParagraph.textContent = name
                     // memberFound.appendChild(newParagraph)

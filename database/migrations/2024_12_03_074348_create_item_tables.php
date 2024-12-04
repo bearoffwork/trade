@@ -20,7 +20,8 @@ use Illuminate\Support\Facades\Schema;
  *                   = B(9) + B(4)
  *                   = 4 + 2 = 6 bytes
  */
-return new class extends Migration {
+return new class extends Migration
+{
     /**
      * Run the migrations.
      */

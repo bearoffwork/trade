@@ -20,12 +20,14 @@ class AppInit extends Command
     {
         $cacheUser = User::all();
 
-        $this->call('migrate:fresh');
+        $this->call('migrate:fresh', [
+            '--seed' => true,
+        ]);
 
         $this->call('make:filament-user', [
             '--name' => 'test',
             '--email' => 'test@localhost',
-            '--password' => '1234'
+            '--password' => '1234',
         ]);
 
         $cacheUser->each(function (User $user) {

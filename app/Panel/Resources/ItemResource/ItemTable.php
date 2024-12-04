@@ -7,7 +7,6 @@ use Filament\Tables\Table;
 
 trait ItemTable
 {
-
     public static function table(Table $table): Table
     {
         return $table

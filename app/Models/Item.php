@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Item extends Model
@@ -18,5 +19,10 @@ class Item extends Model
             relatedKey: 'id',
             relation: __FUNCTION__,
         );
+    }
+
+    public function ItemType(): BelongsTo
+    {
+        return $this->belongsTo(ItemType::class, 'item_type', 'id', __FUNCTION__);
     }
 }

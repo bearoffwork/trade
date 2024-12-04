@@ -3,6 +3,7 @@
 namespace App\Providers\Filament;
 
 use App\Panel\Pages\Login;
+use Filament\Forms\Components\Select;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -68,5 +69,10 @@ class PanelProvider extends FilamentPanelProvider
         FilamentAsset::register([
             Js::make('paste-ocr', Vite::asset('resources/js/paste-ocr.js'))->module(),
         ]);
+
+        Select::configureUsing(function (Select $select) {
+            $select
+                ->native(false);
+        });
     }
 }

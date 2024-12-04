@@ -19,7 +19,6 @@ class ItemResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-
     public static function getRelations(): array
     {
         return [
