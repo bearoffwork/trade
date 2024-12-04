@@ -104,7 +104,9 @@ return new class extends Migration {
         Schema::create('user_money', function (Blueprint $table) {
             $table->comment('錢包紀錄');
             $table->id();
-            $table->foreignId('iid')->constrained('items');
+            /** @see \App\Enums\MoneyAct */
+            $table->tinyInteger('act')->comment('紀錄分類');
+            $table->foreignId('iid')->nullable()->constrained('items');
             $table->foreignId('uid')->constrained('users');
             $table->decimal('amount', 13, 4)->comment('進出金額');
             $table->decimal('balance', 9)->comment('餘額');

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\MoneyAct;
 use App\Models\Activity;
 use App\Models\Item;
 use App\Models\ItemType;
@@ -26,5 +27,13 @@ class DatabaseSeeder extends Seeder
         Item::factory(10)
             ->withRandomUsers()
             ->create();
+
+        User::all()->each(function (User $user) {
+            $user->Money()->createMany([[
+                'act' => MoneyAct::Set,
+                'balance' => $balance = fake()->randomNumber(6),
+                'amount' => $balance,
+            ]]);
+        });
     }
 }
