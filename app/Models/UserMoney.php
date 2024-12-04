@@ -13,6 +13,8 @@ class UserMoney extends Model
     {
         return [
             'act' => MoneyAct::class,
+            'balance' => 'decimal:2',
+            'amount' => 'decimal:2',
         ];
     }
 

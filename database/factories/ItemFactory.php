@@ -23,7 +23,7 @@ class ItemFactory extends Factory
             'total_amt' => $buyer !== null ? $this->faker->numberBetween(1, 500) * 350 : null,
             'drop_at' => Carbon::now(),
             'close_at' => Carbon::now(),
-            'pay_at' => Carbon::now(),
+            'pay_at' => $buyer !== null ? $this->faker->randomElement([now(), null]) : null,
             'create_uid' => User::inRandomOrder()->value('id'),
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),

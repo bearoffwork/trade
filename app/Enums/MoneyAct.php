@@ -6,7 +6,7 @@ use Filament\Support\Contracts\HasLabel;
 
 enum MoneyAct: int implements HasLabel
 {
-    case Set = 1;
+    case Income = 1;
     case Buy = 2;
     case Withdrawal = 3;
 

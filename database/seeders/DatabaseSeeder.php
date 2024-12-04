@@ -27,13 +27,5 @@ class DatabaseSeeder extends Seeder
         Item::factory(10)
             ->withRandomUsers()
             ->create();
-
-        User::all()->each(function (User $user) {
-            $user->Money()->createMany([[
-                'act' => MoneyAct::Set,
-                'balance' => $balance = fake()->randomNumber(6),
-                'amount' => $balance,
-            ]]);
-        });
     }
 }
