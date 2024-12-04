@@ -22,10 +22,17 @@ class AppInit extends Command
 
         $this->call('migrate:fresh');
 
+        $this->call('make:filament-user', [
+            '--name' => 'test',
+            '--email' => 'test@localhost',
+            '--password' => '1234'
+        ]);
+
         $cacheUser->each(function (User $user) {
-            User::insert($user
-                ->setHidden([])
-                ->attributesToArray());
+            User::where('name', $user->name)->update([
+                'password' => $user->password,
+                'remember_token' => $user->remember_token,
+            ]);
         });
     }
 }

@@ -47,7 +47,7 @@ return new class extends Migration {
         foreach (self::users as $name) {
             User::create([
                 'name' => $name,
-                'password' => Hash::make($name),
+                'password' => bcrypt('1234'),
                 'email' => $name . '@localhost',
             ]);
         }
