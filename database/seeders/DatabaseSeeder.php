@@ -3,7 +3,9 @@
 namespace Database\Seeders;
 
 use App\Models\Activity;
+use App\Models\Item;
 use App\Models\ItemType;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -17,8 +19,12 @@ class DatabaseSeeder extends Seeder
     {
         ItemType::factory(6)
             ->create();
-        // INSERT INTO items (item_name, item_type, create_uid, drop_at, act_id)
-        // VALUES ('t', 'at', 1, CURRENT_TIMESTAMP, 'test')
-        Activity::create(['id' => 'test_act']);
+
+        Activity::factory(6)
+            ->create();
+
+        Item::factory(10)
+            ->withRandomUsers()
+            ->create();
     }
 }

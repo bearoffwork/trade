@@ -5,8 +5,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     private const users = [
         '藥吹',
         '藥炎',
@@ -45,13 +44,17 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        foreach (self::users as $name) {
-            User::create([
+        $passwd = Hash::make('1234');
+        User::insert(collect(self::users)
+            ->map(static fn($name) => [
                 'name' => $name,
-                'password' => bcrypt('1234'),
-                'email' => $name.'@localhost',
-            ]);
-        }
+                'password' => $passwd,
+                'email' => $name . '@localhost',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ])
+            ->toArray()
+        );
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();

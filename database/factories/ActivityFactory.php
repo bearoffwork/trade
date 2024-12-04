@@ -2,19 +2,19 @@
 
 namespace Database\Factories;
 
-use App\Models\ItemType;
+use App\Models\Activity;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Carbon;
 
-class ItemTypeFactory extends Factory
+class ActivityFactory extends Factory
 {
-    protected $model = ItemType::class;
+    protected $model = Activity::class;
 
     public function definition(): array
     {
         return [
             'id' => $this->faker->words(asText: true),
-            'type_desc' => $this->faker->randomElement([$this->faker->sentence(), null]),
+            'act_desc' => $this->faker->randomElement([$this->faker->sentence(), null]),
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ];

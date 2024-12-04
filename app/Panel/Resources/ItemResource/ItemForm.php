@@ -71,7 +71,7 @@ trait ItemForm
                     ->columnSpan(1)
                     ->columns(1)
                     ->schema([
-                        TextInput::make('amount')
+                        TextInput::make('total_amt')
                             ->numeric(),
                         Select::make('buyer_uid')
                             ->relationship('Buyer', User::getFrontendDisplayColumn()),

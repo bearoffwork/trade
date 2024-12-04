@@ -20,8 +20,7 @@ use Illuminate\Support\Facades\Schema;
  *                   = B(9) + B(4)
  *                   = 4 + 2 = 6 bytes
  */
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -85,7 +84,7 @@ return new class extends Migration
             $table->string('act_id')->comment('活動名稱');
             $table->foreign('act_id')->references('id')->on('activities');
 
-            $table->integer('amount')->nullable()->comment('入帳金額');
+            $table->integer('total_amt')->nullable()->comment('結標(入帳)金額');
             $table->foreignId('buyer_uid')->nullable()->comment('得標者');
 
             $table->timestamp('drop_at')->comment('物品掉落時間');

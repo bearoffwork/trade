@@ -20,7 +20,7 @@ class CreateItem extends CreateRecord
 
         /** @var Item $model */
         $model = parent::handleRecordCreation($data);
-        $model->Users()->attach($users);
+        $model->Users()->sync($users);
 
         return $model;
     }
