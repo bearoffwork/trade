@@ -7,6 +7,7 @@ use App\Panel\Resources\ItemResource\ItemForm;
 use App\Panel\Resources\ItemResource\ItemTable;
 use App\Panel\Resources\ItemResource\Pages;
 use Filament\Resources\Resource;
+use Illuminate\Database\Eloquent\Model;
 
 // use App\Panel\Resources\ItemResource\RelationManagers;
 
@@ -33,5 +34,10 @@ class ItemResource extends Resource
             'create' => Pages\CreateItem::route('/create'),
             'edit' => Pages\EditItem::route('/{record}/edit'),
         ];
+    }
+
+    public static function canEdit(Model|Item $record): bool
+    {
+        return $record->pay_at === null && parent::canEdit($record);
     }
 }
