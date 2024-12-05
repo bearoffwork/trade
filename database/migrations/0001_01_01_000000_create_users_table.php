@@ -5,7 +5,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     private const users = [
         '藥吹',
         '藥炎',
@@ -49,7 +50,7 @@ return new class extends Migration {
             ->map(static fn($name) => [
                 'name' => $name,
                 'password' => $passwd,
-                'email' => $name . '@localhost',
+                'email' => $name.'@localhost',
                 'created_at' => now(),
                 'updated_at' => now(),
             ])

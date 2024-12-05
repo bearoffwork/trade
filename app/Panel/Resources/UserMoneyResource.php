@@ -4,7 +4,6 @@ namespace App\Panel\Resources;
 
 use App\Models\UserMoney;
 use App\Panel\Resources\UserMoneyResource\Pages;
-use App\Panel\Resources\UserMoneyResource\RelationManagers;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -24,7 +23,7 @@ class UserMoneyResource extends Resource
     {
         return $form
             ->schema([
-                Textinput::make('uid')
+                Textinput::make('uid'),
             ]);
     }
 
@@ -47,14 +46,14 @@ class UserMoneyResource extends Resource
                     ->form([
                         Placeholder::make('user')
                             ->content(fn(UserMoney $record) => $record->username),
-                        TextInput::make('amount')->required()
+                        TextInput::make('amount')->required(),
                     ])
                     ->requiresConfirmation()
                     ->action(function (UserMoney $record, array $data) {
                         $newRecord = $record->replicate(['id']);
-                        $newRecord->balance = $newRecord->balance - data_get($data, 'amount');;
+                        $newRecord->balance = $newRecord->balance - data_get($data, 'amount');
                         $newRecord->save();
-                    })
+                    }),
             ], position: Tables\Enums\ActionsPosition::BeforeCells)
             ->bulkActions([
                 // Tables\Actions\BulkActionGroup::make([

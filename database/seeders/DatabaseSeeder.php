@@ -2,11 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Enums\MoneyAct;
 use App\Models\Activity;
 use App\Models\Item;
 use App\Models\ItemType;
-use App\Models\User;
 use Illuminate\Database\Seeder;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;

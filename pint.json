@@ -1,0 +1,30 @@
+{
+    "preset": "laravel",
+    "rules": {
+        "not_operator_with_successor_space": false,
+        "function_declaration": {
+            "closure_fn_spacing": "none",
+            "closure_function_spacing": "one",
+            "trailing_comma_single_line": false
+        },
+        "new_with_braces": {
+            "anonymous_class": false,
+            "named_class": false
+        },
+        "phpdoc_align": {
+            "align": "vertical",
+            "spacing": {
+                "param": 1
+            }
+        },
+        "phpdoc_separation": {
+            "groups": [],
+            "skip_unlisted_annotations": true
+        }
+    },
+    "notPath": [
+        "storage",
+        "vendor"
+    ]
+}
+

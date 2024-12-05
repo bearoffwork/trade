@@ -20,7 +20,8 @@ use Illuminate\Support\Facades\Schema;
  *                   = B(9) + B(4)
  *                   = 4 + 2 = 6 bytes
  */
-return new class extends Migration {
+return new class extends Migration
+{
     /**
      * Run the migrations.
      */
@@ -62,7 +63,6 @@ return new class extends Migration {
             ['id' => '紫印章'],
             ['id' => '紫天堂石'],
         ]);
-
 
         Schema::create('activities', function (Blueprint $table) {
             $table->comment('活動');

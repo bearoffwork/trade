@@ -63,7 +63,7 @@ trait ItemTable
                             $money->balance = bcadd($money->balance, $divAmount);
                             $user->Money()->save($money);
                         });
-                    })
+                    }),
 
             ])
             ->bulkActions([
