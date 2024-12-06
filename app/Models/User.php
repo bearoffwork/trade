@@ -11,16 +11,18 @@ use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 
 /**
- * @property int                             $id
- * @property string                          $name
- * @property string                          $email
+ * 
+ *
+ * @property int $id
+ * @property string $name
+ * @property string $email
  * @property \Illuminate\Support\Carbon|null $email_verified_at
- * @property string                          $password
- * @property string|null                     $remember_token
+ * @property string $password
+ * @property string|null $remember_token
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\UserMoney|null $Balance
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\UserMoney> $Money
+ * @property-read \App\Models\WalletRecord|null $Balance
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\WalletRecord> $Money
  * @property-read int|null $money_count
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
  * @property-read int|null $notifications_count
@@ -28,7 +30,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property-read int|null $permissions_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \Spatie\Permission\Models\Role> $roles
  * @property-read int|null $roles_count
- * @method static \Database\Factories\UserFactory                    factory($count = null, $state = [])
+ * @method static \Database\Factories\UserFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User permission($permissions, $without = false)
@@ -76,12 +78,12 @@ class User extends Authenticatable
 
     public function Money(): HasMany
     {
-        return $this->hasMany(UserMoney::class, 'uid', 'id');
+        return $this->hasMany(WalletRecord::class, 'uid', 'id');
     }
 
     public function Balance(): HasOne
     {
-        return $this->hasMany(UserMoney::class, 'uid', 'id')
+        return $this->hasMany(WalletRecord::class, 'uid', 'id')
             ->latest()
             ->one();
     }

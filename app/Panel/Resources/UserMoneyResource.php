@@ -2,7 +2,7 @@
 
 namespace App\Panel\Resources;
 
-use App\Models\UserMoney;
+use App\Models\WalletRecord;
 use App\Panel\Resources\UserMoneyResource\Pages;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\TextInput;
@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\DB;
 
 class UserMoneyResource extends Resource
 {
-    protected static ?string $model = UserMoney::class;
+    protected static ?string $model = WalletRecord::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -31,7 +31,7 @@ class UserMoneyResource extends Resource
     {
         return $table
             ->modifyQueryUsing(function (Builder $query) {
-                $query->whereIn('id', UserMoney::select(DB::raw('MAX(id) as id'))->groupBy('uid'));
+                $query->whereIn('id', WalletRecord::select(DB::raw('MAX(id) as id'))->groupBy('uid'));
             })
             ->columns([
                 Tables\Columns\TextColumn::make('username'),
@@ -45,11 +45,11 @@ class UserMoneyResource extends Resource
                     ->label('Withdraw')
                     ->form([
                         Placeholder::make('user')
-                            ->content(fn(UserMoney $record) => $record->username),
+                            ->content(fn(WalletRecord $record) => $record->username),
                         TextInput::make('amount')->required(),
                     ])
                     ->requiresConfirmation()
-                    ->action(function (UserMoney $record, array $data) {
+                    ->action(function (WalletRecord $record, array $data) {
                         $newRecord = $record->replicate(['id']);
                         $newRecord->balance = $newRecord->balance - data_get($data, 'amount');
                         $newRecord->save();

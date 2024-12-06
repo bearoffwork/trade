@@ -2,10 +2,9 @@
 
 namespace App\Panel\Resources\ItemResource;
 
-use App\Enums\MoneyAct;
 use App\Models\Item;
 use App\Models\User;
-use App\Models\UserMoney;
+use App\Models\WalletRecord;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -56,15 +55,13 @@ trait ItemTable
                         $modAmount = bcmod($record->total_amt, $divCount);
 
                         $record->Users->each(static function (User $user) use ($divAmount) {
-                            /** @var UserMoney $money */
-                            $money = $user->Balance?->replicate(except: ['id']) ?? new UserMoney(['balance' => 0]);
-                            $money->act = MoneyAct::Income;
+                            /** @var WalletRecord $money */
+                            $money = $user->Balance?->replicate(except: ['id']) ?? new WalletRecord(['balance' => 0]);
                             $money->amount = $divAmount;
                             $money->balance = bcadd($money->balance, $divAmount);
                             $user->Money()->save($money);
                         });
                     }),
-
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
