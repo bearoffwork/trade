@@ -2,7 +2,7 @@
 
 namespace App\Panel\Resources;
 
-use App\Models\WalletRecord;
+use App\Database\Models\WalletRecord;
 use App\Panel\Resources\UserMoneyResource\Pages;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\TextInput;

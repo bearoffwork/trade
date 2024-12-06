@@ -1,21 +1,26 @@
 <?php
 
-namespace App\Models;
+namespace App\Database\Models;
 
+use App\Database\Concerns\BelongsToItem;
+use App\Database\Concerns\BelongsToUser;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * @property int                             $id
- * @property int|null                        $uid
- * @property int|null                        $iid
- * @property numeric                         $amount
- * @property numeric                         $balance
+ * 
+ *
+ * @property int $id
+ * @property int $uid
+ * @property int|null $iid
+ * @property int|null $fid
+ * @property numeric $amount
+ * @property numeric $balance
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\User|null $User
+ * @property-read \App\Database\Models\User|null $Item
+ * @property-read \App\Database\Models\User $User
  * @property-read mixed $username
  * @method static Builder<static>|WalletRecord fund()
  * @method static Builder<static>|WalletRecord newModelQuery()
@@ -27,6 +32,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class WalletRecord extends Model
 {
+    use BelongsToItem;
+    use BelongsToUser;
+
     protected function casts(): array
     {
         return [
@@ -44,11 +52,6 @@ class WalletRecord extends Model
     {
         return $query->withoutGlobalScope('user')
             ->whereNull('uid');
-    }
-
-    public function User(): BelongsTo
-    {
-        return $this->belongsTo(User::class, 'uid', 'id', __FUNCTION__);
     }
 
     protected function username(): Attribute

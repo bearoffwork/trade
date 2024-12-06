@@ -1,7 +1,8 @@
 <?php
 
-use App\Models\ItemType;
-use App\Models\User;
+use App\Database\Models\FundRecord;
+use App\Database\Models\ItemType;
+use App\Database\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -50,7 +51,10 @@ return new class extends Migration
             $table->string('act_id')->comment('活動名稱');
             $table->foreign('act_id')->references('id')->on('activities');
 
-            $table->integer('total_amt')->nullable()->comment('結標(入帳)金額');
+            $table->decimal('tax_rate')->comment('稅率');
+            $table->decimal('fund_rate')->comment('公積金分成');
+            $table->integer('total_amt')->nullable()->comment('結標金額');
+            $table->integer('posted_amt')->nullable()->comment('實際入帳金額');
             $table->foreignId('buyer_uid')->nullable()->comment('得標者');
 
             $table->timestamp('drop_at')->comment('物品掉落時間');
@@ -67,13 +71,29 @@ return new class extends Migration
             $table->foreignId('uid')->constrained('users');
         });
 
+        Schema::create('fund_records', function (Blueprint $table) {
+            $table->comment('公積金紀錄');
+            $table->id();
+            $table->nullableMorphs('fundable');
+            $table->decimal('amount', 13, 4)->comment('進出金額');
+            $table->decimal('balance', 9)->comment('餘額');
+            $table->timestamps();
+        });
+
+        FundRecord::create([
+            'amount' => 0,
+            'balance' => 0,
+        ]);
+
         Schema::create('wallet_records', function (Blueprint $table) {
             $table->comment('錢包紀錄');
             $table->id();
-            $table->foreignId('uid')->nullable()->comment('公積金 = null')
+            $table->foreignId('uid')->comment('公積金 = null')
                 ->constrained('users');
             $table->foreignId('iid')->nullable()->comment('交易紀錄有 item id')
                 ->constrained('items');
+            $table->foreignId('fid')->nullable()->comment('公積金紀錄 id, 對帳用')
+                ->constrained('fund_records');
             $table->decimal('amount', 13, 4)->comment('進出金額');
             $table->decimal('balance', 9)->comment('餘額');
             $table->timestamps();

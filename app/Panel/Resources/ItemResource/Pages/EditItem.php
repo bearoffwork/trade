@@ -2,10 +2,12 @@
 
 namespace App\Panel\Resources\ItemResource\Pages;
 
-use App\Models\Item;
+use App\Database\Models\Item;
 use App\Panel\Resources\ItemResource;
 use Filament\Actions;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Pages\EditRecord;
+use Filament\Support\Colors\Color;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -18,7 +20,31 @@ class EditItem extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            //            Actions\DeleteAction::make(),
+        ];
+    }
+
+    protected function getFormActions(): array
+    {
+        return [
+            $this->getSaveFormAction(),
+            Actions\EditAction::make()
+                ->color(Color::Blue)
+                ->label('Checkout')
+                ->form([
+                    TextInput::make('tax_rate')
+                        ->formatStateUsing(fn($state) => $state * 100)
+                        ->required(),
+                    TextInput::make('fund_rate')
+                        ->formatStateUsing(fn($state) => $state * 100)
+                        ->required(),
+                    TextInput::make('total_amt')
+                        ->required(),
+                    TextInput::make('posted_amt')
+                        ->required(),
+                    TextInput::make('buyer_uid'),
+                ]),
+            $this->getCancelFormAction(),
         ];
     }
 

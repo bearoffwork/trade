@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Database\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -15,6 +15,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property string $item_type
  * @property int $qty
  * @property string $act_id
+ * @property string $tax_rate
+ * @property string $fund_rate
  * @property int|null $total_amt
  * @property int|null $buyer_uid
  * @property string $drop_at
@@ -23,12 +25,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property int $create_uid
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\Activity $Activity
- * @property-read \App\Models\User|null $Buyer
- * @property-read \App\Models\ItemType $ItemType
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\User> $Users
+ * @property-read \App\Database\Models\Activity $Activity
+ * @property-read \App\Database\Models\User|null $Buyer
+ * @property-read \App\Database\Models\ItemType $ItemType
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Database\Models\User> $Users
  * @property-read int|null $users_count
- * @method static \Database\Factories\ItemFactory factory($count = null, $state = [])
+ * @method static \Database\Factories\Database\Models\ItemFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Item newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Item newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Item query()

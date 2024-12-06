@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\Activity;
-use App\Models\Item;
-use App\Models\ItemType;
+use App\Database\Models\Activity;
+use App\Database\Models\Item;
+use App\Database\Models\ItemType;
 use Illuminate\Database\Seeder;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;

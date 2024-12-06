@@ -2,7 +2,7 @@
 
 namespace App\Panel\Resources\ItemResource\Pages;
 
-use App\Models\Item;
+use App\Database\Models\Item;
 use App\Panel\Resources\ItemResource;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Database\Eloquent\Model;
