@@ -1,8 +1,11 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
+use BezhanSalleh\FilamentShield\Support\Utils;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Foundation\Auth\User;
+use Illuminate\Support\Facades\Schema;
+use Spatie\Permission\Models\Role;
 
 return new class extends Migration
 {

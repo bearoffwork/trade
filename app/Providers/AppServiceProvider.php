@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Database\PatchedSQLiteGrammar;
+use BezhanSalleh\FilamentShield\Facades\FilamentShield;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
@@ -32,6 +33,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Model::unguard();
+        FilamentShield::prohibitDestructiveCommands($this->app->isProduction());
 
         // * @throws NotFoundExceptionInterface|ContainerExceptionInterface if failed to get 'db.connection'
         // support check constraint

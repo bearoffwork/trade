@@ -3,7 +3,9 @@
 namespace App\Console\Commands;
 
 use App\Database\Models\User;
+use BezhanSalleh\FilamentShield\Support\Utils;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Hash;
 use Symfony\Component\Console\Attribute\AsCommand;
 
 #[AsCommand('app:init')]
@@ -20,21 +22,26 @@ class AppInit extends Command
     {
         $cacheUser = User::all();
 
-        $this->call('migrate:fresh', [
-            '--seed' => true,
-        ]);
+        $this->call('migrate:fresh');
+        $this->call('db:seed', ['--class' => 'ShieldSeeder']);
 
-        $this->call('make:filament-user', [
-            '--name' => 'test',
-            '--email' => 'test@localhost',
-            '--password' => '1234',
-        ]);
+        if (!app()->isProduction()) {
+            $cacheUser->each(function (User $user) {
+                User::where('name', $user->name)->update([
+                    'password' => $user->password,
+                    'remember_token' => $user->remember_token,
+                ]);
+            });
 
-        $cacheUser->each(function (User $user) {
-            User::where('name', $user->name)->update([
-                'password' => $user->password,
-                'remember_token' => $user->remember_token,
-            ]);
-        });
+            User::create([
+                'name' => 'test',
+                'email' => 'test@localhost',
+                'password' => Hash::make('test'),
+            ])
+                ->assignRole(Utils::getSuperAdminName());
+
+            $this->call('db:seed');
+        }
+
     }
 }

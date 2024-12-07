@@ -20,6 +20,8 @@ class UserResource extends Resource
     {
         return $form
             ->schema([
+                Forms\Components\Placeholder::make('user')
+                    ->content(fn(User $record) => $record->name),
                 Forms\Components\CheckboxList::make('roles')
                     ->relationship('roles', 'name')
                     ->searchable(),

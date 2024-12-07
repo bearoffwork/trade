@@ -125,6 +125,7 @@ return new class extends Migration
     public function insertDefaultData(): void
     {
         $users = [
+            '藥插',
             '藥吹',
             '藥炎',
             '藥頭',
