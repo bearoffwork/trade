@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property string $tax_rate
  * @property string $fund_rate
  * @property int|null $total_amt
+ * @property int|null $posted_amt
  * @property int|null $buyer_uid
  * @property string $drop_at
  * @property string|null $close_at

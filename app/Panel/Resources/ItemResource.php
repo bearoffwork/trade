@@ -6,6 +6,7 @@ use App\Database\Models\Item;
 use App\Database\Models\User;
 use App\Panel\Resources\ItemResource\Pages;
 use App\Services\MoneyService;
+use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -17,8 +18,18 @@ use Illuminate\Support\Carbon;
 
 // use App\Panel\Resources\ItemResource\RelationManagers;
 
-class ItemResource extends Resource
+class ItemResource extends Resource implements HasShieldPermissions
 {
+    public static function getPermissionPrefixes(): array
+    {
+        return [
+            'view',
+            'create',
+            'update',
+            'checkout',
+        ];
+    }
+
     protected static ?string $model = Item::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
@@ -114,18 +125,20 @@ class ItemResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+
                 Tables\Actions\Action::make('checkout')
-                    ->hidden(fn(Item $record) => $record->pay_at !== null || $record->buyer_uid === null)
-                    ->label('Checkout')
-                    ->requiresConfirmation()
-                    ->action(function (Item $record, MoneyService $svc) {
-                        if ($record->pay_at !== null) {
-                            return;
-                        }
-                        $record->pay_at = now();
-                        $record->save();
-                        $svc->doShare(item: $record);
-                    }),
+                    ->url(fn(Item $record) => Pages\Checkout::getUrl(compact('record'))),
+                //                    ->hidden(fn(Item $record) => $record->pay_at !== null || $record->buyer_uid === null)
+                //                    ->label('Checkout')
+                //                    ->requiresConfirmation()
+                //                    ->action(function (Item $record, MoneyService $svc) {
+                //                        if ($record->pay_at !== null) {
+                //                            return;
+                //                        }
+                //                        $record->pay_at = now();
+                //                        $record->save();
+                //                        $svc->doShare(item: $record);
+                //                    }),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -147,6 +160,7 @@ class ItemResource extends Resource
             'index' => Pages\ListItems::route('/'),
             'create' => Pages\CreateItem::route('/create'),
             'edit' => Pages\EditItem::route('/{record}/edit'),
+            'checkout' => Pages\Checkout::route('/{record}/checkout'),
         ];
     }
 

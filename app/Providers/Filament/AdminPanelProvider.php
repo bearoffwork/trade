@@ -3,6 +3,8 @@
 namespace App\Providers\Filament;
 
 use App\Panel\Pages\Login;
+use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
+use Exception;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
 use Filament\Http\Middleware\Authenticate;
@@ -24,17 +26,17 @@ use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades\Vite;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
-class PanelProvider extends FilamentPanelProvider
+class AdminPanelProvider extends FilamentPanelProvider
 {
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function panel(Panel $panel): Panel
     {
         return $panel
             ->default()
-            ->id('panel')
-            ->path('p')
+            ->id('admin')
+            ->path('a')
             ->login(Login::class)
             ->colors([
                 'primary' => Color::Amber,
@@ -62,6 +64,9 @@ class PanelProvider extends FilamentPanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
+            ])
+            ->plugins([
+                FilamentShieldPlugin::make(),
             ]);
     }
 

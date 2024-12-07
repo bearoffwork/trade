@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Panel\Resources\UserMoneyResource\Pages;
+namespace App\Panel\Resources\UserResource\Pages;
 
-use App\Panel\Resources\UserMoneyResource;
+use App\Panel\Resources\UserResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 
-class ListUserMoney extends ListRecords
+class ListUsers extends ListRecords
 {
-    protected static string $resource = UserMoneyResource::class;
+    protected static string $resource = UserResource::class;
 
     protected function getHeaderActions(): array
     {

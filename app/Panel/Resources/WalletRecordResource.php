@@ -13,7 +13,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 
-class UserMoneyResource extends Resource
+class WalletRecordResource extends Resource
 {
     protected static ?string $model = WalletRecord::class;
 
@@ -72,8 +72,8 @@ class UserMoneyResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListUserMoney::route('/'),
-            'create' => Pages\CreateUserMoney::route('/create'),
+            'index' => Pages\ListWalletRecord::route('/'),
+            'create' => Pages\CreateWalletRecord::route('/create'),
         ];
     }
 }
