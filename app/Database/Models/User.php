@@ -3,6 +3,8 @@
 namespace App\Database\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -12,14 +14,12 @@ use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 
 /**
- * 
- *
- * @property int $id
- * @property string $name
- * @property string $email
+ * @property int                             $id
+ * @property string                          $name
+ * @property string                          $email
  * @property \Illuminate\Support\Carbon|null $email_verified_at
- * @property string $password
- * @property string|null $remember_token
+ * @property string                          $password
+ * @property string|null                     $remember_token
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Database\Models\WalletRecord|null $Balance
@@ -33,7 +33,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property-read int|null $permissions_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \Spatie\Permission\Models\Role> $roles
  * @property-read int|null $roles_count
- * @method static \Database\Factories\Database\Models\UserFactory factory($count = null, $state = [])
+ * @method static \Database\Factories\Database\Models\UserFactory    factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User permission($permissions, $without = false)
@@ -45,7 +45,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @noinspection PhpFullyQualifiedNameUsageInspection
  * @noinspection PhpUnnecessaryFullyQualifiedNameInspection
  */
-class User extends Authenticatable
+class User extends Authenticatable implements FilamentUser
 {
     use HasFactory;
     use HasRoles;
@@ -94,5 +94,10 @@ class User extends Authenticatable
     public function FundRecords(): MorphMany
     {
         return $this->morphMany(FundRecord::class, 'fundable', 'fundable_type', 'fundable_id');
+    }
+
+    public function canAccessPanel(Panel $panel): bool
+    {
+        return true;
     }
 }
