@@ -18,6 +18,11 @@ class WalletRecordPolicy
         return $user->can('view_any_wallet::record');
     }
 
+    public function viewAll(User $user): bool
+    {
+        return $user->can('view_all_wallet::record');
+    }
+
     /**
      * Determine whether the user can view the model.
      */

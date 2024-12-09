@@ -117,7 +117,7 @@ class ItemResource extends Resource
                             ->dehydrated(false)
                             ->inline()
                             ->boolean()
-                            ->formatStateUsing(fn(Item $record) => $record->pay_at !== null),
+                            ->formatStateUsing(fn(?Item $record) => $record?->pay_at !== null),
                         Forms\Components\DateTimePicker::make('pay_at')
                             ->required()
                             ->dehydrated(fn(Get $get) => $get('is_paid'))

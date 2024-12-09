@@ -3,7 +3,10 @@
 namespace App\Panel\Resources;
 
 use App\Database\Models\WalletRecord;
+use App\Enums\WalletRecordCategory;
+use App\Panel\Pages\Withdraw;
 use App\Panel\Resources\UserMoneyResource\Pages;
+use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -12,7 +15,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 
-class WalletRecordResource extends Resource
+class WalletRecordResource extends Resource implements HasShieldPermissions
 {
     protected static ?string $model = WalletRecord::class;
 
@@ -33,19 +36,28 @@ class WalletRecordResource extends Resource
 
     public static function table(Table $table): Table
     {
+        $canViewAll = auth()->user()->can('viewAll', WalletRecord::class);
+
         return $table
-            ->modifyQueryUsing(function (Builder $query) {
+            ->modifyQueryUsing(static function (Builder $query) use ($canViewAll) {
                 $query
-                    ->where('uid', auth()->id())
+                    ->when(
+                        value: !$canViewAll,
+                        callback: fn(Builder $query) => $query->where('uid', auth()->id())
+                    )
                     ->orderBy('id', 'desc');
             })
             ->columns([
-                // Tables\Columns\TextColumn::make('username')
-                //     ->label(__('wallet_records.table.username')),
-                Tables\Columns\TextColumn::make('type')
-                    ->label(__('wallet_records.table.type'))
+                Tables\Columns\TextColumn::make('username')
+                    ->label(__('wallet_records.table.username'))
+                    ->hidden(!$canViewAll),
+                Tables\Columns\TextColumn::make('category')
+                    ->label(__('wallet_records.table.category'))
                     ->description(function (WalletRecord $record) {
-                        return $record->Item->act_id.' - '.$record->Item->item_name;
+                        return match ($record->category) {
+                            WalletRecordCategory::Share => $record->Item->act_id.' - '.$record->Item->item_name,
+                            default => null,
+                        };
                     }),
                 Tables\Columns\TextColumn::make('amount')
                     ->label(__('wallet_records.table.amount'))
@@ -66,9 +78,9 @@ class WalletRecordResource extends Resource
                 //
             ])
             ->bulkActions([
-                // Tables\Actions\BulkActionGroup::make([
-                //     Tables\Actions\DeleteBulkAction::make(),
-                // ]),
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                ]),
             ]);
     }
 
@@ -83,7 +95,14 @@ class WalletRecordResource extends Resource
     {
         return [
             'index' => Pages\ListWalletRecord::route('/'),
-            'create' => Pages\CreateWalletRecord::route('/create'),
+        ];
+    }
+
+    public static function getPermissionPrefixes(): array
+    {
+        return [
+            'view_all',
+            ...config('filament-shield.permission_prefixes.resource'),
         ];
     }
 }

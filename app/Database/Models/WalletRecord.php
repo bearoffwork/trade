@@ -4,19 +4,22 @@ namespace App\Database\Models;
 
 use App\Database\Concerns\BelongsToItem;
 use App\Database\Concerns\BelongsToUser;
-use App\Enums\WalletRecordType;
+use App\Enums\WalletRecordCategory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * @property int                             $id
- * @property int                             $uid
- * @property int|null                        $iid
- * @property int|null                        $fid
- * @property numeric                         $amount
- * @property numeric                         $balance
+ * 
+ *
+ * @property int $id
+ * @property WalletRecordCategory $category
+ * @property int $uid
+ * @property int|null $iid
+ * @property int|null $fid
+ * @property numeric $amount
+ * @property numeric $balance
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Database\Models\FundRecord|null $FundRecord
@@ -39,6 +42,7 @@ class WalletRecord extends Model
     protected function casts(): array
     {
         return [
+            'category' => WalletRecordCategory::class,
             'balance' => 'decimal:2',
             'amount' => 'decimal:2',
         ];
@@ -64,15 +68,6 @@ class WalletRecord extends Model
     {
         return Attribute::make(
             get: fn() => $this->User->getAttribute(User::getFrontendDisplayColumn()) ?? null,
-        );
-    }
-
-    protected function type(): Attribute
-    {
-        return Attribute::make(
-            get: fn($value, array $attributes) => match (true) {
-                $this->iid !== null => WalletRecordType::Share,
-            },
         );
     }
 }

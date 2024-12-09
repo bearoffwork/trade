@@ -2,7 +2,6 @@
 
 namespace App\Panel\Resources\UserMoneyResource\Pages;
 
-use App\Database\Models\WalletRecord;
 use App\Panel\Resources\WalletRecordResource;
 use Filament\Resources\Pages\CreateRecord;
 

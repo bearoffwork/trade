@@ -90,6 +90,8 @@ return new class extends Migration
         Schema::create('wallet_records', function (Blueprint $table) {
             $table->comment('錢包紀錄');
             $table->id();
+            /** @see \App\Enums\WalletRecordCategory */
+            $table->tinyInteger('category')->comment('紀錄分類 1: 分潤, 2: 提款');
             $table->foreignId('uid')->comment('公積金 = null')
                 ->constrained('users');
             $table->foreignId('iid')->nullable()->comment('交易紀錄有 item id')

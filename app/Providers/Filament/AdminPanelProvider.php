@@ -101,6 +101,7 @@ class AdminPanelProvider extends FilamentPanelProvider
                 ->numeric()
                 ->extraInputAttributes(['style' => 'text-align:right']);
         });
+
         TextInput::macro('percentage', function () {
             return $this
                 ->number()

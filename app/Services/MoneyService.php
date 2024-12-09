@@ -6,6 +6,7 @@ use App\Database\Models\FundRecord;
 use App\Database\Models\Item;
 use App\Database\Models\User;
 use App\Database\Models\WalletRecord;
+use App\Enums\WalletRecordCategory;
 use App\Settings\Defaults;
 use LogicException;
 
@@ -48,13 +49,14 @@ readonly class MoneyService
         $fundRecord->save();
 
         $item->Users->each(static function (User $user) use ($eachShare, $item, $fundRecord) {
-            /** @var WalletRecord $money */
-            $money = $user->Balance?->replicate() ?? new WalletRecord(['balance' => 0]);
-            $money->amount = $eachShare;
-            $money->balance = bcadd($money->balance, $eachShare);
-            $money->Item()->associate($item);
-            $money->FundRecord()->associate($fundRecord);
-            $user->Money()->save($money);
+            /** @var WalletRecord $walletRecord */
+            $walletRecord = $user->Balance?->replicate() ?? new WalletRecord(['balance' => 0]);
+            $walletRecord->category = WalletRecordCategory::Share;
+            $walletRecord->amount = $eachShare;
+            $walletRecord->balance = bcadd($walletRecord->balance, $eachShare);
+            $walletRecord->Item()->associate($item);
+            $walletRecord->FundRecord()->associate($fundRecord);
+            $user->WalletRecords()->save($walletRecord);
         });
     }
 

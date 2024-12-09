@@ -5,7 +5,6 @@ namespace App\Panel\Resources\ItemResource\Pages;
 use App\Database\Models\Item;
 use App\Panel\Resources\ItemResource;
 use App\Services\MoneyService;
-use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Database\Eloquent\Model;
 
@@ -15,13 +14,6 @@ use Illuminate\Database\Eloquent\Model;
 class EditItem extends EditRecord
 {
     protected static string $resource = ItemResource::class;
-
-    protected function getHeaderActions(): array
-    {
-        return [
-            //            Actions\DeleteAction::make(),
-        ];
-    }
 
     protected function handleRecordUpdate(Model|Item $record, array $data): Model
     {

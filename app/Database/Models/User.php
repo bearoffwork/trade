@@ -25,8 +25,8 @@ use Spatie\Permission\Traits\HasRoles;
  * @property-read \App\Database\Models\WalletRecord|null $Balance
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Database\Models\FundRecord> $FundRecords
  * @property-read int|null $fund_records_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Database\Models\WalletRecord> $Money
- * @property-read int|null $money_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Database\Models\WalletRecord> $WalletRecords
+ * @property-read int|null $wallet_records_count
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
  * @property-read int|null $notifications_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \Spatie\Permission\Models\Permission> $permissions
@@ -79,7 +79,7 @@ class User extends Authenticatable
         return config('display.hide_names') ? 'id' : 'name';
     }
 
-    public function Money(): HasMany
+    public function WalletRecords(): HasMany
     {
         return $this->hasMany(WalletRecord::class, 'uid', 'id');
     }
