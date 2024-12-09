@@ -16,12 +16,12 @@ return [
     'tenant_model' => null,
 
     'auth_provider_model' => [
-        'fqcn' => \App\Database\Models\User::class,
+        'fqcn' => App\Database\Models\User::class,
     ],
 
     'super_admin' => [
         'enabled' => true,
-        'name' => '管理員',
+        'name' => App\Database\Models\Role::ROLE_ADMIN,
         'define_via_gate' => false,
         'intercept_gate' => 'before', // after
     ],

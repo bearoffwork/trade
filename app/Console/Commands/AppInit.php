@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Database\Models\User;
 use BezhanSalleh\FilamentShield\Support\Utils;
+use Database\Seeders\UserPermSeeder;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Hash;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -23,7 +24,7 @@ class AppInit extends Command
         $cacheUser = User::all();
 
         $this->call('migrate:fresh');
-        $this->call('db:seed', ['--class' => 'ShieldSeeder']);
+        $this->call('db:seed', ['--class' => UserPermSeeder::class]);
 
         if (!app()->isProduction()) {
             $cacheUser->each(function (User $user) {

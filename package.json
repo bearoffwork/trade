@@ -1,6 +1,6 @@
 {
     "private": true,
-    "name":"trade",
+    "name": "trade",
     "type": "module",
     "scripts": {
         "build": "vite build",

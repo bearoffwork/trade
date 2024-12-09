@@ -10,6 +10,12 @@ class ListWalletRecord extends ListRecords
 {
     protected static string $resource = WalletRecordResource::class;
 
+    protected function getHeaderWidgets(): array
+    {
+        return [
+        ];
+    }
+
     protected function getHeaderActions(): array
     {
         return [

@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Database\PatchedSQLiteGrammar;
+use App\Services\MoneyService;
 use BezhanSalleh\FilamentShield\Facades\FilamentShield;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -12,6 +13,10 @@ use Psr\Container\NotFoundExceptionInterface;
 
 class AppServiceProvider extends ServiceProvider
 {
+    public $singletons = [
+        MoneyService::class,
+    ];
+
     /**
      * Register any application services.
      */

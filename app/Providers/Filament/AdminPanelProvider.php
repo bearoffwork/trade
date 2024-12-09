@@ -4,9 +4,12 @@ namespace App\Providers\Filament;
 
 use App\Panel\Pages\Login;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
+use Carbon\Carbon;
 use Exception;
+use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -84,7 +87,26 @@ class AdminPanelProvider extends FilamentPanelProvider
         DateTimePicker::configureUsing(function (DateTimePicker $picker) {
             $picker
                 ->native(false)
-                ->displayFormat('Y-m-d H:i:s');
+                ->displayFormat('Y-m-d H:i:s')
+                ->hint(fn($state) => Carbon::parse($state)->diffForHumans());
+        });
+
+        DatePicker::configureUsing(function (DateTimePicker $picker) {
+            $picker
+                ->displayFormat('Y-m-d');
+        });
+
+        TextInput::macro('number', function () {
+            return $this
+                ->numeric()
+                ->extraInputAttributes(['style' => 'text-align:right']);
+        });
+        TextInput::macro('percentage', function () {
+            return $this
+                ->number()
+                ->formatStateUsing(fn($state) => bcmul($state, '100'))
+                ->dehydrateStateUsing(fn($state) => bcdiv($state, '100', 4))
+                ->suffix('%');
         });
     }
 }

@@ -6,37 +6,41 @@ use App\Database\Models\Item;
 use App\Database\Models\User;
 use App\Panel\Resources\ItemResource\Pages;
 use App\Services\MoneyService;
-use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
+use App\Settings\Defaults;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
+use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Carbon;
 
 // use App\Panel\Resources\ItemResource\RelationManagers;
 
-class ItemResource extends Resource implements HasShieldPermissions
+class ItemResource extends Resource
 {
-    public static function getPermissionPrefixes(): array
-    {
-        return [
-            'view',
-            'create',
-            'update',
-            'checkout',
-        ];
-    }
-
     protected static ?string $model = Item::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
     {
+        $tax_rate = app(Defaults::class)->tax_rate;
+
         return $form
+            ->extraAttributes([
+                'x-init' => /** @lang JavaScript */ "
+                \$el.querySelectorAll('input').forEach((input) => {
+                    input.addEventListener('keydown', (e) =>
+                        { if (e.key === 'Enter') e.preventDefault() }
+                    )
+                });
+                ",
+            ])
             ->schema([
                 Forms\Components\Group::make()
                     ->extraAttributes([
@@ -55,11 +59,10 @@ class ItemResource extends Resource implements HasShieldPermissions
                                 Forms\Components\TextInput::make('type_desc')
                                     ->label('Description'),
                             ]),
-                        Forms\Components\ToggleButtons::make('Users')
-                            ->required()
-                            ->multiple()
-                            ->inline()
-                            ->options(User::pluck(User::getFrontendDisplayColumn(), 'id')),
+                        Forms\Components\CheckboxList::make('Users')
+                            ->columns(3)
+                            ->searchable()
+                            ->relationship(name: 'Users', titleAttribute: 'name'),
                         Forms\Components\TextInput::make('ocr')
                             ->dehydrated(false)
                             ->placeholder('Paste Screenshot Here')
@@ -80,7 +83,6 @@ class ItemResource extends Resource implements HasShieldPermissions
                             ->default(now()),
                         Forms\Components\DateTimePicker::make('close_at')
                             ->default(now()->endOfWeek())
-                            ->hint(fn($state) => Carbon::parse($state)->diffForHumans(now()))
                             ->live(),
                     ]),
                 Forms\Components\Group::make()
@@ -91,10 +93,36 @@ class ItemResource extends Resource implements HasShieldPermissions
                     ->columnSpan(1)
                     ->columns(1)
                     ->schema([
-                        Forms\Components\TextInput::make('total_amt')
-                            ->numeric(),
-                        Forms\Components\Select::make('buyer_uid')
-                            ->relationship('Buyer', User::getFrontendDisplayColumn()),
+                        TextInput::make('fund_rate')
+                            ->percentage()
+                            ->required(),
+                        TextInput::make('total_amt')
+                            ->number()
+                            ->live(onBlur: true)
+                            ->afterStateUpdated(fn(Get $get, Set $set, MoneyService $svc) => $set(
+                                path: 'posted_amt',
+                                state: $svc->getPostedAmt($get('total_amt'))
+                            ))
+                            ->required(),
+                        TextInput::make('posted_amt')
+                            ->number()
+                            ->hint('Tax rate '.bcmul($tax_rate, '100').'%')
+                            ->formatStateUsing(fn($state, Get $get, MoneyService $svc) => $state ?? $svc->getPostedAmt($get('total_amt')))
+                            ->required(),
+                        Select::make('buyer_uid')
+                            ->relationship(name: 'Buyer', titleAttribute: User::getFrontendDisplayColumn())
+                            ->searchable(['name'])
+                            ->preload(),
+                        Forms\Components\ToggleButtons::make('is_paid')
+                            ->dehydrated(false)
+                            ->inline()
+                            ->boolean()
+                            ->formatStateUsing(fn(Item $record) => $record->pay_at !== null),
+                        Forms\Components\DateTimePicker::make('pay_at')
+                            ->required()
+                            ->dehydrated(fn(Get $get) => $get('is_paid'))
+                            ->extraFieldWrapperAttributes(['x-show' => '$wire.data.is_paid == 1'])
+                            ->formatStateUsing(fn($state) => $state ?? now()),
                     ]),
             ]);
     }
@@ -125,9 +153,6 @@ class ItemResource extends Resource implements HasShieldPermissions
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-
-                Tables\Actions\Action::make('checkout')
-                    ->url(fn(Item $record) => Pages\Checkout::getUrl(compact('record'))),
                 //                    ->hidden(fn(Item $record) => $record->pay_at !== null || $record->buyer_uid === null)
                 //                    ->label('Checkout')
                 //                    ->requiresConfirmation()
@@ -141,9 +166,9 @@ class ItemResource extends Resource implements HasShieldPermissions
                 //                    }),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+                // Tables\Actions\BulkActionGroup::make([
+                //     Tables\Actions\DeleteBulkAction::make(),
+                // ]),
             ]);
     }
 
@@ -160,7 +185,7 @@ class ItemResource extends Resource implements HasShieldPermissions
             'index' => Pages\ListItems::route('/'),
             'create' => Pages\CreateItem::route('/create'),
             'edit' => Pages\EditItem::route('/{record}/edit'),
-            'checkout' => Pages\Checkout::route('/{record}/checkout'),
+            'view' => Pages\ViewItem::route('/{record}/view'),
         ];
     }
 

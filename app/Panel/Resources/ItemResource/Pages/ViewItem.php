@@ -3,9 +3,9 @@
 namespace App\Panel\Resources\ItemResource\Pages;
 
 use App\Panel\Resources\ItemResource;
-use Filament\Resources\Pages\EditRecord;
+use Filament\Resources\Pages\ViewRecord;
 
-class Checkout extends EditRecord
+class ViewItem extends ViewRecord
 {
     protected static string $resource = ItemResource::class;
 }

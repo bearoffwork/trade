@@ -14,7 +14,12 @@ class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-users';
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('filament-shield::filament-shield.nav.group');
+    }
 
     public static function form(Form $form): Form
     {
@@ -23,7 +28,6 @@ class UserResource extends Resource
                 Forms\Components\Placeholder::make('user')
                     ->content(fn(User $record) => $record->name),
                 Forms\Components\CheckboxList::make('roles')
-                    ->relationship('roles', 'name')
                     ->searchable(),
             ]);
     }
@@ -32,7 +36,9 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('name'),
+                Tables\Columns\TextColumn::make('roles.name')
+                    ->badge(),
             ])
             ->filters([
                 //

@@ -2,6 +2,7 @@
 
 namespace App\Panel\Resources;
 
+use App\Database\Models\Role;
 use App\Database\Models\WalletRecord;
 use App\Panel\Resources\UserMoneyResource\Pages;
 use Filament\Forms\Components\Placeholder;
@@ -31,7 +32,14 @@ class WalletRecordResource extends Resource
     {
         return $table
             ->modifyQueryUsing(function (Builder $query) {
-                $query->whereIn('id', WalletRecord::select(DB::raw('MAX(id) as id'))->groupBy('uid'));
+                $query
+                    ->when(
+                        value: auth()->user()->hasRole(Role::ROLE_ADMIN),
+                        callback: fn($query) => $query
+                            ->whereIn('id', WalletRecord::select(DB::raw('MAX(id) as id'))->groupBy('uid')),
+                        default: fn($query) => $query
+                            ->where('uid', auth()->id())
+                    );
             })
             ->columns([
                 Tables\Columns\TextColumn::make('username'),
