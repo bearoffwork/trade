@@ -140,12 +140,18 @@ class ItemResource extends Resource
                 )
             )
             ->columns([
-                Tables\Columns\TextColumn::make('item_name'),
-                Tables\Columns\TextColumn::make('item_type'),
-                Tables\Columns\TextColumn::make('qty'),
-                Tables\Columns\TextColumn::make('total_amt'),
-                Tables\Columns\TextColumn::make('buyer'),
+                Tables\Columns\TextColumn::make('item_name')
+                    ->label(__('items.table.item_name')),
+                Tables\Columns\TextColumn::make('item_type')
+                    ->label(__('items.table.item_type')),
+                Tables\Columns\TextColumn::make('qty')
+                    ->label(__('items.table.qty')),
+                Tables\Columns\TextColumn::make('total_amt')
+                    ->label(__('items.table.total_amt')),
+                Tables\Columns\TextColumn::make('buyer')
+                    ->label(__('items.table.buyer_uid')),
                 Tables\Columns\TextColumn::make('pay_at')
+                    ->label(__('items.table.pay_at'))
                     ->dateTime(),
             ])
             ->filters([

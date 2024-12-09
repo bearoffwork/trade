@@ -40,18 +40,20 @@ readonly class MoneyService
             throw new LogicException('Calculation error');
         }
 
-        /** @var FundRecord $fund */
-        $fund = FundRecord::latest()->first()->replicate();
-        $fund->Fundable()->associate($item);
-        $fund->amount = $fundShare;
-        $fund->balance = bcadd($fund->balance, $fundShare);
-        $fund->save();
+        /** @var FundRecord $fundRecord */
+        $fundRecord = FundRecord::latest()->first()->replicate();
+        $fundRecord->Fundable()->associate($item);
+        $fundRecord->amount = $fundShare;
+        $fundRecord->balance = bcadd($fundRecord->balance, $fundShare);
+        $fundRecord->save();
 
-        $item->Users->each(static function (User $user) use ($eachShare) {
+        $item->Users->each(static function (User $user) use ($eachShare, $item, $fundRecord) {
             /** @var WalletRecord $money */
             $money = $user->Balance?->replicate() ?? new WalletRecord(['balance' => 0]);
             $money->amount = $eachShare;
             $money->balance = bcadd($money->balance, $eachShare);
+            $money->Item()->associate($item);
+            $money->FundRecord()->associate($fundRecord);
             $user->Money()->save($money);
         });
     }
