@@ -3,10 +3,10 @@
 namespace App\Policies;
 
 use App\Database\Models\User;
-use App\Database\Models\WalletRecord;
+use App\Database\Models\FundRecord;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class WalletRecordPolicy
+class FundRecordPolicy
 {
     use HandlesAuthorization;
 
@@ -15,15 +15,15 @@ class WalletRecordPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->can('view_any_wallet');
+        return $user->can('view_any_fund');
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, WalletRecord $walletRecord): bool
+    public function view(User $user, FundRecord $fundRecord): bool
     {
-        return $user->can('view_wallet');
+        return $user->can('view_fund');
     }
 
     /**
@@ -31,23 +31,23 @@ class WalletRecordPolicy
      */
     public function create(User $user): bool
     {
-        return $user->can('create_wallet');
+        return $user->can('create_fund');
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, WalletRecord $walletRecord): bool
+    public function update(User $user, FundRecord $fundRecord): bool
     {
-        return $user->can('update_wallet');
+        return $user->can('update_fund');
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, WalletRecord $walletRecord): bool
+    public function delete(User $user, FundRecord $fundRecord): bool
     {
-        return $user->can('delete_wallet');
+        return $user->can('delete_fund');
     }
 
     /**
@@ -55,15 +55,15 @@ class WalletRecordPolicy
      */
     public function deleteAny(User $user): bool
     {
-        return $user->can('delete_any_wallet');
+        return $user->can('delete_any_fund');
     }
 
     /**
      * Determine whether the user can permanently delete.
      */
-    public function forceDelete(User $user, WalletRecord $walletRecord): bool
+    public function forceDelete(User $user, FundRecord $fundRecord): bool
     {
-        return $user->can('force_delete_wallet');
+        return $user->can('force_delete_fund');
     }
 
     /**
@@ -71,15 +71,15 @@ class WalletRecordPolicy
      */
     public function forceDeleteAny(User $user): bool
     {
-        return $user->can('force_delete_any_wallet');
+        return $user->can('force_delete_any_fund');
     }
 
     /**
      * Determine whether the user can restore.
      */
-    public function restore(User $user, WalletRecord $walletRecord): bool
+    public function restore(User $user, FundRecord $fundRecord): bool
     {
-        return $user->can('restore_wallet');
+        return $user->can('restore_fund');
     }
 
     /**
@@ -87,15 +87,15 @@ class WalletRecordPolicy
      */
     public function restoreAny(User $user): bool
     {
-        return $user->can('restore_any_wallet');
+        return $user->can('restore_any_fund');
     }
 
     /**
      * Determine whether the user can replicate.
      */
-    public function replicate(User $user, WalletRecord $walletRecord): bool
+    public function replicate(User $user, FundRecord $fundRecord): bool
     {
-        return $user->can('replicate_wallet');
+        return $user->can('replicate_fund');
     }
 
     /**
@@ -103,6 +103,6 @@ class WalletRecordPolicy
      */
     public function reorder(User $user): bool
     {
-        return $user->can('reorder_wallet');
+        return $user->can('reorder_fund');
     }
 }

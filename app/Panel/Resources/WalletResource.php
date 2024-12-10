@@ -15,7 +15,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 
-class WalletRecordResource extends Resource implements HasShieldPermissions
+class WalletResource extends Resource implements HasShieldPermissions
 {
     protected static ?string $model = WalletRecord::class;
 

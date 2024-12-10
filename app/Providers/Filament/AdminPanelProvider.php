@@ -10,6 +10,7 @@ use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Form;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -78,6 +79,17 @@ class AdminPanelProvider extends FilamentPanelProvider
         FilamentAsset::register([
             Js::make('paste-ocr', Vite::asset('resources/js/paste-ocr.js'))->module(),
         ]);
+
+        Form::macro('preventSubmitOnEnter', /** @lang JavaScript */ fn() => $this
+            ->extraAttributes(['x-init' => /** @lang JavaScript */ "
+                   \$el.querySelectorAll('input').forEach((input) => {
+                       input.addEventListener('keydown', (e) =>
+                           { if (e.key === 'Enter') e.preventDefault() }
+                       )
+                   });
+               ",
+            ])
+        );
 
         Select::configureUsing(function (Select $select) {
             $select

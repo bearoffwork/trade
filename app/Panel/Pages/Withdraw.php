@@ -5,7 +5,7 @@ namespace App\Panel\Pages;
 use App\Database\Models\User;
 use App\Database\Models\WalletRecord;
 use App\Enums\WalletRecordCategory;
-use App\Panel\Resources\WalletRecordResource;
+use App\Panel\Resources\WalletResource;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -73,6 +73,6 @@ class Withdraw extends Page implements HasForms
             $record->save();
         }
 
-        $this->redirect(WalletRecordResource::getUrl());
+        $this->redirect(WalletResource::getUrl());
     }
 }

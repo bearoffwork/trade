@@ -9,6 +9,7 @@ use App\Services\MoneyService;
 use App\Settings\Defaults;
 use Filament\Forms;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
@@ -32,15 +33,7 @@ class ItemResource extends Resource
         $defaults = app(Defaults::class);
 
         return $form
-            ->extraAttributes([
-                'x-init' => /** @lang JavaScript */ "
-                \$el.querySelectorAll('input').forEach((input) => {
-                    input.addEventListener('keydown', (e) =>
-                        { if (e.key === 'Enter') e.preventDefault() }
-                    )
-                });
-                ",
-            ])
+            ->preventSubmitOnEnter()
             ->schema([
                 Forms\Components\Group::make()
                     ->extraAttributes([
@@ -62,7 +55,7 @@ class ItemResource extends Resource
                         Forms\Components\CheckboxList::make('Users')
                             ->columns(3)
                             ->searchable()
-                            ->relationship(name: 'Users', titleAttribute: 'name'),
+                            ->relationship(name: 'Users', titleAttribute: User::getFrontendDisplayColumn()),
                         Forms\Components\TextInput::make('ocr')
                             ->dehydrated(false)
                             ->placeholder('Paste Screenshot Here')

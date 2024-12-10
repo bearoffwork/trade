@@ -28,4 +28,9 @@ class EditItem extends EditRecord
 
         return $item;
     }
+
+    protected function getRedirectUrl(): ?string
+    {
+        return $this::$resource::getUrl();
+    }
 }
