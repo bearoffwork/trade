@@ -71,6 +71,7 @@ return new class extends Migration
             $table->comment('參加人員 中間表');
             $table->foreignId('iid')->constrained('items');
             $table->foreignId('uid')->constrained('users');
+            $table->unsignedTinyInteger('item_role')->comment('角色 1: 參與, 2: 行政');
         });
 
         Schema::create('fund_records', function (Blueprint $table) {

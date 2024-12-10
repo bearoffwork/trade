@@ -9,7 +9,6 @@ use App\Services\MoneyService;
 use App\Settings\Defaults;
 use Filament\Forms;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
@@ -52,10 +51,20 @@ class ItemResource extends Resource
                                 Forms\Components\TextInput::make('type_desc')
                                     ->label('Description'),
                             ]),
-                        Forms\Components\CheckboxList::make('Users')
-                            ->columns(3)
+                        Forms\Components\Checkbox::make('has_operators')
+                            ->label('Has Operators')
+                            ->default(true)
+                            ->dehydrated(false),
+                        Forms\Components\Select::make('Operators')
+                            ->label('Operators')
+                            ->default([auth()->id()])
+                            ->extraFieldWrapperAttributes([
+                                'x-show' => '$wire.data.has_operators',
+                            ])
+                            ->relationship(name: 'Operators', titleAttribute: User::getFrontendDisplayColumn())
                             ->searchable()
-                            ->relationship(name: 'Users', titleAttribute: User::getFrontendDisplayColumn()),
+                            ->multiple()
+                            ->preload(),
                         Forms\Components\TextInput::make('ocr')
                             ->dehydrated(false)
                             ->placeholder('Paste Screenshot Here')
@@ -64,6 +73,10 @@ class ItemResource extends Resource
                                 'x-bind' => 'NamePicInput',
                                 'data-po-result-path' => 'Users',
                             ]),
+                        Forms\Components\CheckboxList::make('Users')
+                            ->columns(3)
+                            ->searchable()
+                            ->relationship(name: 'Users', titleAttribute: User::getFrontendDisplayColumn()),
                         Forms\Components\Select::make('act_id')
                             ->required()
                             ->relationship('Activity', 'id')
