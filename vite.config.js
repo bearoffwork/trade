@@ -7,7 +7,6 @@ export default defineConfig({
             input: [
                 'resources/css/app.css',
                 'resources/js/app.js',
-                'resources/js/rec.js',
                 'resources/js/paste-ocr.js',
             ],
             refresh: true,
