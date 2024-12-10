@@ -9,22 +9,20 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
- * 
- *
- * @property int $id
- * @property string $item_name
- * @property string $item_type
- * @property int $qty
- * @property string $act_id
- * @property string $tax_rate
- * @property string $fund_rate
- * @property int|null $total_amt
- * @property int|null $posted_amt
- * @property int|null $buyer_uid
- * @property string $drop_at
- * @property string|null $close_at
- * @property string|null $pay_at
- * @property int $create_uid
+ * @property int                             $id
+ * @property string                          $item_name
+ * @property string                          $item_type
+ * @property int                             $qty
+ * @property string                          $act_id
+ * @property string                          $tax_rate
+ * @property string                          $fund_rate
+ * @property int|null                        $total_amt
+ * @property int|null                        $posted_amt
+ * @property int|null                        $buyer_uid
+ * @property string                          $drop_at
+ * @property string|null                     $close_at
+ * @property string|null                     $pay_at
+ * @property int                             $create_uid
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Database\Models\Activity $Activity
@@ -34,7 +32,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property-read int|null $operators_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Database\Models\User> $Users
  * @property-read int|null $users_count
- * @method static \Database\Factories\Database\Models\ItemFactory factory($count = null, $state = [])
+ * @method static \Database\Factories\Database\Models\ItemFactory    factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Item newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Item newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Item query()
@@ -57,7 +55,13 @@ class Item extends Model
                 parentKey: 'id',
                 relatedKey: 'id',
                 relation: __FUNCTION__,
-            )
+            );
+    }
+
+    public function Participants(): BelongsToMany
+    {
+        return $this
+            ->Users()
             ->withPivotValue([
                 'item_role' => ItemRole::Participant,
             ]);
@@ -66,15 +70,7 @@ class Item extends Model
     public function Operators(): BelongsToMany
     {
         return $this
-            ->belongsToMany(
-                related: User::class,
-                table: 'item_users',
-                foreignPivotKey: 'iid',
-                relatedPivotKey: 'uid',
-                parentKey: 'id',
-                relatedKey: 'id',
-                relation: __FUNCTION__,
-            )
+            ->Users()
             ->withPivotValue([
                 'item_role' => ItemRole::Operator,
             ]);

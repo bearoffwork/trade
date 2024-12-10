@@ -71,12 +71,12 @@ class ItemResource extends Resource
                             ->extraAttributes([
                                 'x-data' => json_encode(['options' => User::pluck('id', 'name')]),
                                 'x-bind' => 'NamePicInput',
-                                'data-po-result-path' => 'Users',
+                                'data-po-result-path' => 'Participants',
                             ]),
-                        Forms\Components\CheckboxList::make('Users')
+                        Forms\Components\CheckboxList::make('Participants')
                             ->columns(3)
                             ->searchable()
-                            ->relationship(name: 'Users', titleAttribute: User::getFrontendDisplayColumn()),
+                            ->relationship(name: 'Participants', titleAttribute: User::getFrontendDisplayColumn()),
                         Forms\Components\Select::make('act_id')
                             ->required()
                             ->relationship('Activity', 'id')
