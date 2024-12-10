@@ -39,7 +39,7 @@ class ItemFactory extends Factory
         return $this->afterCreating(function (Item $item) {
             // Attach random users
             $users = User::inRandomOrder()->take(fake()->numberBetween(3, 6))->get();
-            $item->Users()->attach($users);
+            $item->Participants()->attach($users);
         });
     }
 }
