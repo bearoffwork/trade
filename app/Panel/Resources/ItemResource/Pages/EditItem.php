@@ -6,7 +6,6 @@ use App\Database\Models\Item;
 use App\Panel\Resources\ItemResource;
 use App\Services\MoneyService;
 use Filament\Resources\Pages\EditRecord;
-use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property Item $record
@@ -15,18 +14,11 @@ class EditItem extends EditRecord
 {
     protected static string $resource = ItemResource::class;
 
-    protected function handleRecordUpdate(Model|Item $record, array $data): Model
+    public function afterSave(): void
     {
-        $isPaid = $record->pay_at !== null;
-        /** @var Item $item */
-        $item = parent::handleRecordUpdate($record, $data);
-        // 第一次結帳
-        if (!$isPaid && data_get($data, 'pay_at') !== null) {
-            info('checkout', ['item' => $item->id]);
-            app(MoneyService::class)->doShare(item: $item);
+        if ($this->record instanceof Item && $this->record->pay_at !== null) {
+            app(MoneyService::class)->doShare(item: $this->record);
         }
-
-        return $item;
     }
 
     protected function getRedirectUrl(): ?string

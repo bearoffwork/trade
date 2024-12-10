@@ -103,6 +103,10 @@ class ItemResource extends Resource
                             ->percentage()
                             ->default($defaults->fund_rate)
                             ->required(),
+                        // TextInput::make('tax_rate')
+                        //     ->percentage()
+                        //     ->default($defaults->tax_rate)
+                        //     ->required(),
                         TextInput::make('total_amt')
                             ->number()
                             ->live(onBlur: true)

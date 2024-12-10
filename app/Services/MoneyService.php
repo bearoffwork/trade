@@ -14,15 +14,15 @@ readonly class MoneyService
 {
     public function doShare(Item $item): void
     {
-        info('doShare #'.$item->id, ['iid' => $item->id, 'total' => $item->total_amt, 'fund_rate' => $item->fund_rate]);
+        info('doShare #'.$item->id, ['iid' => $item->id, 'total' => $item->posted_amt, 'fund_rate' => $item->fund_rate]);
         $divideBy = $item->Users->count();
 
         // 公積金抽成無條件進位
-        $fundShare = bcceil(bcmul($item->total_amt, $item->fund_rate, 2));
+        $fundShare = bcceil(bcmul($item->posted_amt, $item->fund_rate, 2));
         info('doShare #'.$item->id, ['iid' => $item->id, 'fund' => $fundShare]);
 
         // total - 公積金抽成
-        $totalShare = bcsub($item->total_amt, $fundShare, 0);
+        $totalShare = bcsub($item->posted_amt, $fundShare, 0);
         info('doShare #'.$item->id, ['iid' => $item->id, 'totalShare' => $totalShare]);
 
         // 每人分成取整數
@@ -37,7 +37,7 @@ readonly class MoneyService
         $fundShare = bcadd($fundShare, $modulus, 0);
         info('doShare #'.$item->id, ['iid' => $item->id, 'fund+mod' => $fundShare]);
 
-        if (bccomp($item->total_amt, bcadd($fundShare, bcmul($eachShare, $divideBy))) !== 0) {
+        if (bccomp($item->posted_amt, bcadd($fundShare, bcmul($eachShare, $divideBy))) !== 0) {
             throw new LogicException('Calculation error');
         }
 

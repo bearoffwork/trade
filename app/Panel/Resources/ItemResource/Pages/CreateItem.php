@@ -4,24 +4,26 @@ namespace App\Panel\Resources\ItemResource\Pages;
 
 use App\Database\Models\Item;
 use App\Panel\Resources\ItemResource;
+use App\Services\MoneyService;
+use App\Settings\Defaults;
 use Filament\Resources\Pages\CreateRecord;
-use Illuminate\Database\Eloquent\Model;
 
 class CreateItem extends CreateRecord
 {
     protected static string $resource = ItemResource::class;
 
-    protected function handleRecordCreation(array $data): Model
+    protected function mutateFormDataBeforeCreate(array $data): array
     {
-        $users = data_get($data, 'Users');
-        unset($data['Users']);
-
         $data['create_uid'] = auth()->id();
+        $data['tax_rate'] ??= app(Defaults::class)->tax_rate;
 
-        /** @var Item $model */
-        $model = parent::handleRecordCreation($data);
-        $model->Users()->sync($users);
+        return $data;
+    }
 
-        return $model;
+    public function afterCreate(): void
+    {
+        if ($this->record instanceof Item && $this->record->pay_at !== null) {
+            app(MoneyService::class)->doShare(item: $this->record);
+        }
     }
 }
