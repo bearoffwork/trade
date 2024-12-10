@@ -29,7 +29,7 @@ class ItemResource extends Resource
 
     public static function form(Form $form): Form
     {
-        $tax_rate = app(Defaults::class)->tax_rate;
+        $defaults = app(Defaults::class);
 
         return $form
             ->extraAttributes([
@@ -95,6 +95,7 @@ class ItemResource extends Resource
                     ->schema([
                         TextInput::make('fund_rate')
                             ->percentage()
+                            ->default($defaults->fund_rate)
                             ->required(),
                         TextInput::make('total_amt')
                             ->number()
@@ -103,16 +104,26 @@ class ItemResource extends Resource
                                 path: 'posted_amt',
                                 state: $svc->getPostedAmt($get('total_amt'))
                             ))
-                            ->required(),
+                            ->requiredIf('is_paid', '1')
+                            ->validationMessages([
+                                'required_if' => ':attribute is required on Checkout',
+                            ]),
                         TextInput::make('posted_amt')
                             ->number()
-                            ->hint('Tax rate '.bcmul($tax_rate, '100').'%')
+                            ->hint('Tax rate '.bcmul($defaults->tax_rate, '100').'%')
                             ->formatStateUsing(fn($state, Get $get, MoneyService $svc) => $state ?? $svc->getPostedAmt($get('total_amt')))
-                            ->required(),
+                            ->requiredIf('is_paid', '1')
+                            ->validationMessages([
+                                'required_if' => ':attribute is required on Checkout',
+                            ]),
                         Select::make('buyer_uid')
                             ->relationship(name: 'Buyer', titleAttribute: User::getFrontendDisplayColumn())
                             ->searchable(['name'])
-                            ->preload(),
+                            ->preload()
+                            ->requiredIf('is_paid', '1')
+                            ->validationMessages([
+                                'required_if' => ':attribute is required on Checkout',
+                            ]),
                         Forms\Components\ToggleButtons::make('is_paid')
                             ->dehydrated(false)
                             ->inline()
